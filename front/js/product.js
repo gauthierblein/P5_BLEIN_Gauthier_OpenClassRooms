@@ -4,7 +4,7 @@ var search_params = new URLSearchParams(url.search);
 const urlId = search_params.get("_id");
 console.log(urlId);
 
-//-----------------------------------------------------
+
 
 //// Récupération des données sur l'API
 fetch("http://localhost:3000/api/products/" + urlId)
@@ -30,7 +30,7 @@ fetch("http://localhost:3000/api/products/" + urlId)
     console.log("erreur 404" + err);
   });
 
-//-----------------------------------------------------
+
 
 
 //// Validation du click et envoi vers le localStorage
@@ -39,45 +39,99 @@ const addToCart = document.getElementById("addToCart");
 
 addToCart.addEventListener("click", () => {
 
-// Définition des variables
-  let productCart = [];
-  let idSelection = urlId;
-  let imgUrlSelection = document.querySelector("article div.item__img img").src;
-  let imgAltSelection = document.querySelector("article div.item__img img").alt;
-  let nameSelection = document.querySelector("#title").textContent;
-  let colorSelection = document.querySelector("#colors").value;
-  let qtySelection = document.querySelector("#quantity").value;
-  let priceSelection = document.querySelector("#price").textContent;
+  let productLocalStorage = JSON.parse(localStorage.getItem("cart"));
+
+  if (!productLocalStorage) {
+    addFirstProductToCart()
+    }
+    else {
+    addNewProductToCart()
+    }
+
+    // Cas 1 - Le panier est vide
+    function addFirstProductToCart() {
+
+        let productCart = [];
+
+        let imgUrlSelection = document.querySelector("article div.item__img img").src;
+        let imgAltSelection = document.querySelector("article div.item__img img").alt;
+        let nameSelection = document.querySelector("#title").textContent;
+        let colorSelection = document.querySelector("#colors").value;
+        let qtySelection = document.querySelector("#quantity").value;
+        let priceSelection = document.querySelector("#price").textContent;
   
-    let productCartObj = {
-      id : idSelection,
-      img : imgUrlSelection,
-      imgAlt : imgAltSelection,
-      name : nameSelection,
-      color : colorSelection,
-      quantity  : qtySelection,
-      price : priceSelection
-  };
+        let productCartObj = {
+            id : urlId,
+            img : imgUrlSelection,
+            imgAlt : imgAltSelection,
+            name : nameSelection,
+            color : colorSelection,
+            quantity  : qtySelection,
+            price : priceSelection
+        };
 
-// Conditions nécessaires à la validation du panier
-  if (
-    colorSelection === undefined ||
-    colorSelection === "" ||
-    qtySelection === undefined ||
-    qtySelection < 1 ||
-    qtySelection > 100
-    ) 
-  {
-    alert("Pour valider le choix de cet article, veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
+        if (
+            colorSelection === undefined || colorSelection === "" ||
+            qtySelection === undefined || qtySelection < 1 || qtySelection > 100
+        ) {
+            alert("Pour valider le choix de cet article, veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
+        
+        } else {
+            productCart.push(productCartObj);
+            let objCart = JSON.stringify(productCart);
+            localStorage.setItem("cart", objCart);
+            alert("Ajouté au panier !"); 
+        }
+    }
 
-  } else {
+    // Cas 2 - Le panier n'est pas vide
+    function addNewProductToCart() {
 
-  productCart.push(productCartObj);
+        let productCart = JSON.parse(localStorage.getItem("cart"));
 
-  let objCart = JSON.stringify(productCart);
-  localStorage.setItem("cart", objCart);
+        let colorSelection = document.querySelector("#colors").value;
+        let qtySelection = document.querySelector("#quantity").value;
+        let imgUrlSelection = document.querySelector("article div.item__img img").src;
+        let imgAltSelection = document.querySelector("article div.item__img img").alt;
+        let nameSelection = document.querySelector("#title").textContent;
+        let priceSelection = document.querySelector("#price").textContent;
 
-  alert("Ajouté au panier !"); 
-  }
+        let productCartObj = {
+            id : urlId,
+            img : imgUrlSelection,
+            imgAlt : imgAltSelection,
+            name : nameSelection,
+            color : colorSelection,
+            quantity  : qtySelection,
+            price : priceSelection
+        };
+
+        //2a - Si le produit commandé est déjà dans le panier
+        const resultFind = productCart.find((el) => el.id === urlId && el.color === colorSelection);
+        
+            if(resultFind && qtySelection > 0) {
+                console.log("produit identique trouvé");
+                let newQuantity = parseInt(qtySelection) + parseInt(resultFind.quantity)
+                console.log(newQuantity);
+                resultFind.quantity = newQuantity;
+                localStorage.setItem("cart", JSON.stringify(productCart));
+                alert("quantité modifiée")
+            }
+
+            else { 
+                if (
+                    colorSelection === undefined || colorSelection === "" ||
+                    qtySelection === undefined || qtySelection < 1 || qtySelection > 100
+                ) {
+                    alert("Pour valider le choix de cet article, veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
+
+                } else {
+                    productCart.push(productCartObj);
+                    let objCart = JSON.stringify(productCart);
+                    localStorage.setItem("cart", objCart);
+                    alert("Ajouté au panier !"); 
+                }
+            }
+    }
 });
 
