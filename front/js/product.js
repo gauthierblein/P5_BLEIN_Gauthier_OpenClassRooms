@@ -5,14 +5,13 @@ const urlId = search_params.get("_id");
 console.log(urlId);
 
 
-
 //// Récupération des données sur l'API
 fetch("http://localhost:3000/api/products/" + urlId)
   .then((res) => res.json())
   .then((productData) => {
     console.table(productData);
 
-//Fonction d'affichage du produit choisi
+    // Fonction d'affichage du produit choisi
     document.querySelector("article div.item__img").innerHTML = `<img src="${productData.imageUrl}" alt="${productData.altTxt}">`;
     document.getElementById("title").textContent = `${productData.name}`;
     document.getElementById("price").textContent = `${productData.price}`;
@@ -32,11 +31,9 @@ fetch("http://localhost:3000/api/products/" + urlId)
 
 
 
-
 //// Validation du click et envoi vers le localStorage
 
 const addToCart = document.getElementById("addToCart");
-
 addToCart.addEventListener("click", () => {
 
   let productLocalStorage = JSON.parse(localStorage.getItem("cart"));
@@ -117,7 +114,7 @@ addToCart.addEventListener("click", () => {
                 localStorage.setItem("cart", JSON.stringify(productCart));
                 alert("quantité modifiée")
             }
-
+        //2b - Si le produit commandé n'est pas dans le panier
             else { 
                 if (
                     colorSelection === undefined || colorSelection === "" ||
