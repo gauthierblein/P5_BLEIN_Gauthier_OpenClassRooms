@@ -2,14 +2,12 @@
 fetch("http://localhost:3000/api/products")
   .then((res) => res.json())
   .then((productsData) => {
-    console.table(productsData);
     displayProducts(productsData);
 
     // en cas d'erreur remplace le contenu de titre par un h1 au contenu de erreur 404 et également sur la console
   })
   .catch((err) => {
     document.querySelector(".titles").innerHTML = "<h1>erreur 404</h1>";
-    console.log("erreur 404" + err);
   });
 
 //-----------------------------------------------------

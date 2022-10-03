@@ -2,14 +2,12 @@
 var url = new URL(document.location);
 var search_params = new URLSearchParams(url.search);
 const urlId = search_params.get("_id");
-console.log(urlId);
 
 
 //// Récupération des données sur l'API
 fetch("http://localhost:3000/api/products/" + urlId)
   .then((res) => res.json())
   .then((productData) => {
-    console.table(productData);
 
     // Fonction d'affichage du produit choisi
     document.querySelector("article div.item__img").innerHTML = `<img src="${productData.imageUrl}" alt="${productData.altTxt}">`;
@@ -26,12 +24,10 @@ fetch("http://localhost:3000/api/products/" + urlId)
   })
   .catch((err) => {
     document.querySelector(".item").innerHTML = "<h1>erreur 404</h1>";
-    console.log("erreur 404" + err);
   });
 
 
-
-//// Validation du click et envoi vers le localStorage
+//// Ecoute du click et envoi vers le localStorage
 
 const addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", () => {
@@ -107,13 +103,12 @@ addToCart.addEventListener("click", () => {
         const resultFind = productCart.find((el) => el.id === urlId && el.color === colorSelection);
         
             if(resultFind && qtySelection > 0) {
-                console.log("produit identique trouvé");
                 let newQuantity = parseInt(qtySelection) + parseInt(resultFind.quantity)
-                console.log(newQuantity);
                 resultFind.quantity = newQuantity;
                 localStorage.setItem("cart", JSON.stringify(productCart));
                 alert("quantité modifiée")
             }
+            
         //2b - Si le produit commandé n'est pas dans le panier
             else { 
                 if (

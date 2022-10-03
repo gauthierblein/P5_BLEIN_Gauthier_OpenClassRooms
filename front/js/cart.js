@@ -1,6 +1,5 @@
 //// Fonction d'affichage des produits dans le panier
 let productLocalStorage = JSON.parse(localStorage.getItem("cart"));
-console.table(productLocalStorage);
 
 if (!productLocalStorage) {
 
@@ -141,7 +140,6 @@ function modifyQty() {
           }
       });
     });
-
 }
 modifyQty();
 
@@ -267,7 +265,6 @@ orderButton.addEventListener('click', (event) => {
                 contact,
                 products,
             }
-            console.log(finalOrder)
 
             const options = {
                 method: 'POST',
@@ -278,10 +275,8 @@ orderButton.addEventListener('click', (event) => {
             fetch("http://localhost:3000/api/products/order", options)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
                     localStorage.setItem('orderId', data.orderId)
                     document.location.href = 'confirmation.html?id='+ data.orderId
                 });
-    }
-        
+    }       
 })
