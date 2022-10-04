@@ -14,16 +14,31 @@ fetch("http://localhost:3000/api/products")
 
 //// Fonction displayProducts pour l'affichage dynamique des items
 function displayProducts(productsData) {
-  const zoneItem = document.querySelector("#items");
-  // création de la boucle pour afficher tous les items récupérés
-  for (let item of productsData) {
-    // remplissage de la section #items avec les différentes balises pour chaque item (grâce à la boucle), insertion de l'adresse du produit via chemin product + _id
-    zoneItem.innerHTML += `<a href="./product.html?_id=${item._id}">
-          <article>
-            <img src="${item.imageUrl}" alt="${item.altTxt}">
-            <h3 class="productName">${item.name}</h3>
-            <p class="productDescription">${item.description}</p>
-          </article>
-        </a>`;
-  }
-}
+
+  const zoneItems = document.querySelector("#items")
+    for (let i=0; i < productsData.length; i++) {
+
+      let itemLink = document.createElement("a");
+      let id = productsData[i]._id
+      zoneItems.appendChild(itemLink);
+      itemLink.href = "./product.html?_id=" + id
+
+      let itemArticle = document.createElement("article");
+      itemLink.appendChild(itemArticle);
+
+      let itemImg = document.createElement("img");
+      itemArticle.appendChild(itemImg);
+      itemImg.src = productsData[i].imageUrl;
+      itemImg.alt = productsData[i].altTxt;
+        
+      let itemTitle = document.createElement("h3");
+      itemArticle.appendChild(itemTitle);
+      itemTitle.className = "productName";
+      itemTitle.innerHTML = productsData[i].name;
+
+      let itemDescription = document.createElement("p");
+      itemArticle.appendChild(itemDescription);
+      itemDescription.className = "productDescription";
+      itemDescription.innerHTML = productsData[i].description;
+    }
+} 

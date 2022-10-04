@@ -117,7 +117,6 @@ function getTotals(){
 
     document.getElementById('totalQuantity').innerHTML = totalQty;
     document.getElementById('totalPrice').innerHTML = totalPrice;
-
 }
 getTotals();
 
@@ -134,9 +133,8 @@ function modifyQty() {
             article.id == cartItem.dataset.id && cartItem.dataset.color === article.color
           ) {
             article.quantity = event.target.value;
+            getTotals();
             localStorage.setItem("cart", JSON.stringify(productLocalStorage));
-
-            location.reload();
           }
       });
     });
